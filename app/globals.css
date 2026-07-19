@@ -951,3 +951,297 @@ button {
     margin-top: 40px;
   }
 }
+
+/* ---- 作品详情页（版式移植自 cali-YANG 站详情页） ---- */
+
+.work-page {
+  min-height: 100svh;
+  color: #0b0c0e;
+  background: #fafafa;
+}
+
+.work-article {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 24px 96px;
+}
+
+.work-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9vh;
+}
+
+.work-back {
+  color: rgba(11, 12, 14, 0.55);
+  font-size: 14px;
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.work-back:hover {
+  color: #0b0c0e;
+}
+
+.lang-toggle {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid rgba(11, 12, 14, 0.16);
+  border-radius: 999px;
+  color: rgba(11, 12, 14, 0.65);
+  background: #fff;
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.lang-toggle:hover {
+  border-color: rgba(11, 12, 14, 0.4);
+  color: #0b0c0e;
+}
+
+.work-header h1 {
+  margin: 0;
+  font-size: clamp(30px, 5.4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+}
+
+.work-date {
+  margin: 14px 0 0;
+  color: rgba(11, 12, 14, 0.42);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.work-divider {
+  margin-top: 10px;
+  border-bottom: 1px solid rgba(11, 12, 14, 0.1);
+}
+
+.work-type-line {
+  margin: 12px 0 0;
+  color: rgba(11, 12, 14, 0.5);
+  font-size: 14px;
+}
+
+.work-lede {
+  margin-top: 34px;
+  color: rgba(11, 12, 14, 0.62);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.work-lede p {
+  margin: 0;
+}
+
+.work-lede p + p {
+  margin-top: 12px;
+}
+
+.work-meta-block {
+  margin: 32px 0;
+}
+
+.meta-row {
+  display: flex;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(11, 12, 14, 0.1);
+  font-size: 14px;
+}
+
+.meta-label {
+  flex: 0 0 96px;
+  color: rgba(11, 12, 14, 0.38);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-top: 1px;
+}
+
+.meta-value {
+  color: #0b0c0e;
+}
+
+.work-quote {
+  margin: 40px 0;
+  padding: 8px 0 8px 20px;
+  border-left: 2px solid #0b0c0e;
+  color: #0b0c0e;
+  font-size: 22px;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* 叠放画廊 */
+.stack-clip {
+  margin: 40px -16px;
+  padding: 0 16px;
+  overflow-x: clip;
+}
+
+.stack-stage {
+  position: relative;
+  margin: 0 auto;
+  transform-style: preserve-3d;
+}
+
+.stack-card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(11, 12, 14, 0.06);
+  box-shadow: 0 10px 30px rgba(11, 12, 14, 0.16);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+.stack-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  display: block;
+}
+
+.stack-caption {
+  position: relative;
+  z-index: 10;
+  margin: 48px 0 0;
+  color: rgba(11, 12, 14, 0.38);
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* 单图 + 灯箱 */
+.work-figure {
+  display: block;
+  width: 100%;
+  margin: 24px 0;
+}
+
+.work-figure-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(11, 12, 14, 0.1);
+  background: rgba(11, 12, 14, 0.05);
+  cursor: zoom-in;
+  user-select: none;
+}
+
+.work-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-out;
+  background: rgba(12, 13, 16, 0.93);
+  transition: opacity 250ms ease;
+}
+
+.work-lightbox img {
+  position: relative;
+  z-index: 10;
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  backface-visibility: hidden;
+}
+
+/* 视频 */
+.work-videos {
+  display: grid;
+  align-items: start;
+  gap: 40px;
+  margin: 32px 0;
+}
+
+.work-video {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.work-video video.is-landscape {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.work-video video.is-portrait {
+  margin: 0 auto;
+  max-height: min(64svh, 600px);
+  width: auto;
+  max-width: 100%;
+  border-radius: 14px;
+}
+
+.work-video figcaption {
+  margin: 12px auto 0;
+  max-width: 65ch;
+  color: rgba(11, 12, 14, 0.5);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.work-demo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  margin: 24px 0;
+  padding: 0 20px;
+  border-radius: 999px;
+  color: #0b0c0e;
+  background: rgba(11, 12, 14, 0.07);
+  font-size: 14px;
+  font-weight: 550;
+  text-decoration: none;
+  transition: background-color 300ms ease;
+}
+
+.work-demo-link:hover {
+  background: rgba(11, 12, 14, 0.13);
+}
+
+.work-footer {
+  margin-top: 72px;
+}
+
+/* 首页作品卡片链接化 */
+.work-card {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .work-videos.is-pair {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}

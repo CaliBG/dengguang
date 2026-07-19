@@ -5,6 +5,8 @@ export type Work = {
   year: string;
   description: string;
   cover: string;
+  /** 详情页 slug（app/site/works-data.ts），无详情页的条目（如赛事）留空 */
+  slug?: string;
 };
 
 // 作品数据：从旧作品集站（zuopinwangzhan / aurorashouse-restore）迁移。
@@ -12,6 +14,7 @@ export type Work = {
 export const WORKS: Work[] = [
   {
     id: "01",
+    slug: "force-balance",
     title: "43+1 — 力量与平衡",
     category: "空间",
     year: "2025",
@@ -21,6 +24,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "02",
+    slug: "memory-of-the-flesh",
     title: "皮囊记忆 / Memory of the Flesh",
     category: "空间",
     year: "2025",
@@ -30,6 +34,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "03",
+    slug: "pain",
     title: "痛 — 被规训的皮囊",
     category: "空间",
     year: "2025",
@@ -39,6 +44,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "04",
+    slug: "deep-sea-breathing",
     title: "深海呼吸 — 压力代谢仪式",
     category: "实验",
     year: "2026",
@@ -48,6 +54,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "05",
+    slug: "imprint-flowing-traces",
     title: "拓印 — 流动的痕",
     category: "实验",
     year: "2026",
@@ -57,6 +64,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "06",
+    slug: "yzs-merch",
     title: "YZS® 周边系列 — 可触摸的态度",
     category: "品牌",
     year: "2026",
@@ -66,6 +74,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "07",
+    slug: "quiet-index",
     title: "安静指数 / Quiet Index",
     category: "实验",
     year: "2026",
@@ -75,6 +84,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "08",
+    slug: "indigo-lion",
     title: "靛狮·域守 — Indigo Lion",
     category: "空间",
     year: "2026",
@@ -84,6 +94,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "09",
+    slug: "tongkuang",
     title: "同框 / Tongkuang — 前后双摄相机",
     category: "应用",
     year: "2026",

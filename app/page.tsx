@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MorsLightExperience } from "./MorsLightExperience";
 import { BackToTop } from "./site/BackToTop";
 import { WORKS } from "./site/content";
@@ -19,19 +20,34 @@ export default function Home() {
             装置、可穿戴、交互与品牌——从暗室到亮场，这些是灯下的作品。
           </p>
           <div className="works-grid">
-            {WORKS.map((work) => (
-              <article key={work.id} className="work-card">
-                <div className="work-thumb">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`${BASE_PATH}${work.cover}`} alt={work.title} loading="lazy" />
-                </div>
-                <h3>{work.title}</h3>
-                <p className="work-meta">
-                  {work.category} · {work.year}
-                </p>
-                <p className="work-desc">{work.description}</p>
-              </article>
-            ))}
+            {WORKS.map((work) => {
+              const card = (
+                <>
+                  <div className="work-thumb">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${BASE_PATH}${work.cover}`} alt={work.title} loading="lazy" />
+                  </div>
+                  <h3>{work.title}</h3>
+                  <p className="work-meta">
+                    {work.category} · {work.year}
+                  </p>
+                  <p className="work-desc">{work.description}</p>
+                </>
+              );
+              return work.slug ? (
+                <Link
+                  key={work.id}
+                  href={`/works/${work.slug}`}
+                  className="work-card is-linked"
+                >
+                  {card}
+                </Link>
+              ) : (
+                <article key={work.id} className="work-card">
+                  {card}
+                </article>
+              );
+            })}
           </div>
         </section>
 
