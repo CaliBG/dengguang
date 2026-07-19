@@ -45,8 +45,12 @@ npm run deploy
 
 ## 添加作品
 
-作品数据在 [`app/site/content.ts`](./app/site/content.ts)，按 `Work` 结构往
-`WORKS` 数组里加条目即可，页面自动渲染卡片。
+- 首页卡片：在 [`app/site/content.ts`](./app/site/content.ts) 的 `WORKS` 数组加条目
+  （封面图放 `public/works/`），页面自动渲染。
+- 作品详情页：在 [`app/site/works-data.ts`](./app/site/works-data.ts) 的
+  `YZS_WORKS` 数组加条目（双语正文、材料/类型/团队、金句、图片、视频；媒体放
+  `public/work-detail/`），并把 `content.ts` 里对应卡片的 `slug` 指向它，
+  构建时自动生成 `/works/<slug>/` 静态页。详情页含中英切换、叠放画廊与图片灯箱。
 
 ## 致谢与来源
 

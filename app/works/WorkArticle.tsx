@@ -4,6 +4,7 @@
 // 布局对应 cali-YANG 站详情页：大标题 → 日期 → 分割线 → 类型行 → 正文。
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { LanguageProvider, useLanguage } from "../site/language";
 import type { YzsWork } from "../site/works-data";
 import WorkBody from "./WorkBody";
@@ -11,6 +12,16 @@ import WorkBody from "./WorkBody";
 function ArticleInner({ work }: { work: YzsWork }) {
   const { lang, toggleLang } = useLanguage();
   const zh = lang === "zh";
+
+  // 详情页是浅色页：覆盖 html 的深色背景（为首页暗场景准备的），
+  // 否则 iOS/触控板橡皮筋回弹会在浅色页面外露出全黑画布。
+  useEffect(() => {
+    const previous = document.documentElement.style.backgroundColor;
+    document.documentElement.style.backgroundColor = "#fafafa";
+    return () => {
+      document.documentElement.style.backgroundColor = previous;
+    };
+  }, []);
 
   return (
     <article className="work-article">

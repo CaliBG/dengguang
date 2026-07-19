@@ -40,6 +40,9 @@ export default function StackGallery({
     dx: 0,
     dy: 0,
     cardIdx: -1,
+    // 触摸需要方向判定：纵向是页面滚动，横向才是拖牌
+    isTouch: false,
+    committed: false,
   });
 
   const transformFor = useCallback(
@@ -58,9 +61,10 @@ export default function StackGallery({
     });
   }, []);
 
-  // 自动轮播（悬停/拖拽时暂停）
+  // 自动轮播（悬停/拖拽/聚焦时暂停；reduced-motion 下完全关闭）
   useEffect(() => {
     if (hovering || total < 2) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     const t = setInterval(sendTopToBack, AUTOPLAY_MS);
     return () => clearInterval(t);
   }, [hovering, total, sendTopToBack]);
@@ -74,12 +78,39 @@ export default function StackGallery({
         : { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
     };
 
+    const releaseCard = (restore: boolean) => {
+      const d = drag.current;
+      const el = cardRefs.current[d.cardIdx];
+      if (el) {
+        el.style.cursor = "";
+        el.style.transition = CARD_TRANSITION;
+        if (restore) el.style.transform = "rotate(0deg) scale(1)";
+      }
+      d.active = false;
+      d.committed = false;
+      d.cardIdx = -1;
+    };
+
     const onMove = (e: MouseEvent | TouchEvent) => {
       const d = drag.current;
       if (!d.active) return;
       const { x, y } = getXY(e);
       d.dx = x - d.startX;
       d.dy = y - d.startY;
+
+      // 触摸：先判定方向——纵向让给页面滚动（touch-action: pan-y 会接管并
+      // 触发 touchcancel），明显横向才算拖牌；未判定前不动卡片。
+      if (d.isTouch && !d.committed) {
+        const slop = 12;
+        if (Math.abs(d.dy) > slop && Math.abs(d.dy) > Math.abs(d.dx)) {
+          releaseCard(true);
+          setHovering(false);
+          return;
+        }
+        if (Math.abs(d.dx) <= slop) return;
+        d.committed = true;
+      }
+
       const el = cardRefs.current[d.cardIdx];
       if (el) {
         el.style.transition = "none";
@@ -92,29 +123,38 @@ export default function StackGallery({
     const onUp = () => {
       const d = drag.current;
       if (!d.active) return;
-      d.active = false;
-      const el = cardRefs.current[d.cardIdx];
-      if (el) {
-        el.style.cursor = "";
-        el.style.transition = CARD_TRANSITION;
-      }
-      if (Math.abs(d.dx) > SENSITIVITY || Math.abs(d.dy) > SENSITIVITY) {
-        sendTopToBack();
-      } else if (el) {
-        el.style.transform = "rotate(0deg) scale(1)";
-      }
-      d.cardIdx = -1;
+      const wasTouch = d.isTouch;
+      const committed = !d.isTouch || d.committed;
+      // 触摸只按横向位移判定换牌，避免滚动手势误触发
+      const shuffle =
+        committed &&
+        (d.isTouch
+          ? Math.abs(d.dx) > SENSITIVITY
+          : Math.abs(d.dx) > SENSITIVITY || Math.abs(d.dy) > SENSITIVITY);
+      releaseCard(!shuffle);
+      if (shuffle) sendTopToBack();
+      // 触摸结束后恢复自动轮播（触摸设备没有 mouseleave）
+      if (wasTouch) setHovering(false);
+    };
+
+    const onCancel = () => {
+      const d = drag.current;
+      if (!d.active) return;
+      releaseCard(true);
+      setHovering(false);
     };
 
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
     window.addEventListener("touchmove", onMove, { passive: true });
     window.addEventListener("touchend", onUp);
+    window.addEventListener("touchcancel", onCancel);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
       window.removeEventListener("touchmove", onMove);
       window.removeEventListener("touchend", onUp);
+      window.removeEventListener("touchcancel", onCancel);
     };
   }, [sendTopToBack]);
 
@@ -126,9 +166,18 @@ export default function StackGallery({
       const t = (e as React.TouchEvent).touches?.[0];
       const x = t ? t.clientX : (e as React.MouseEvent).clientX;
       const y = t ? t.clientY : (e as React.MouseEvent).clientY;
-      drag.current = { active: true, startX: x, startY: y, dx: 0, dy: 0, cardIdx: idx };
+      drag.current = {
+        active: true,
+        startX: x,
+        startY: y,
+        dx: 0,
+        dy: 0,
+        cardIdx: idx,
+        isTouch: Boolean(t),
+        committed: false,
+      };
       const el = cardRefs.current[idx];
-      if (el) el.style.cursor = "grabbing";
+      if (el && !t) el.style.cursor = "grabbing";
       setHovering(true);
     };
 
@@ -145,6 +194,21 @@ export default function StackGallery({
       <div
         className="stack-stage"
         style={{ width: `min(${maxWidth}px, calc(100vw - 5rem))`, aspectRatio: aspect }}
+        role="button"
+        tabIndex={0}
+        aria-label={
+          lang === "zh"
+            ? `${alt} 图片画廊，共 ${total} 张，按回车或右方向键换牌`
+            : `${alt} gallery, ${total} images. Press Enter or Right Arrow to shuffle.`
+        }
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " " || e.key === "ArrowRight") {
+            e.preventDefault();
+            sendTopToBack();
+          }
+        }}
+        onFocus={() => setHovering(true)}
+        onBlur={() => setHovering(false)}
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
       >

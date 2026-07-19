@@ -14,7 +14,8 @@ import {
 
 export type Lang = "en" | "zh";
 
-const STORAGE_KEY = "lang";
+// 带站点前缀：calibg.github.io 上多个站共享同一 origin 的 localStorage
+const STORAGE_KEY = "dengguang-lang";
 
 interface LanguageContextValue {
   lang: Lang;
@@ -28,7 +29,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>("zh");
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      // Safari 禁 cookie / 沙盒 WebView 中访问 localStorage 本身会抛错
+      return;
+    }
     if (saved !== "zh" && saved !== "en") return;
     // 延迟到下一帧再应用本地偏好：避免 effect 内同步 setState，
     // 同时保持 SSR 首帧恒定 "zh"、挂载后才切换的 hydration 安全策略。

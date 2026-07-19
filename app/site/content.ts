@@ -47,7 +47,7 @@ export const WORKS: Work[] = [
     slug: "deep-sea-breathing",
     title: "深海呼吸 — 压力代谢仪式",
     category: "实验",
-    year: "2026",
+    year: "2025",
     description:
       "当社会压力如深海般无声蔓延，服饰表面流动的呼吸鳃结构将焦虑转化为可视的起伏波纹。",
     cover: "/works/work04.jpg",
@@ -57,7 +57,7 @@ export const WORKS: Work[] = [
     slug: "imprint-flowing-traces",
     title: "拓印 — 流动的痕",
     category: "实验",
-    year: "2026",
+    year: "2025",
     description:
       "以“沙”为媒介，将无形的时间感知转化为可观察与触摸的流动痕迹。距离即介入，观众即参与者。",
     cover: "/works/work05.jpg",
@@ -77,7 +77,7 @@ export const WORKS: Work[] = [
     slug: "quiet-index",
     title: "安静指数 / Quiet Index",
     category: "实验",
-    year: "2026",
+    year: "2025",
     description:
       "通过电子显示屏与环境传感器，把宿舍里不可见的噪音与作息状态转化为可理解的“安静指数”，以非指向性的方式缓解共享空间的隐性压力。",
     cover: "/works/work07.jpg",

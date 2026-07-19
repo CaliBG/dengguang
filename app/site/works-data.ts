@@ -24,7 +24,7 @@ export interface YzsWork {
   galleryAspect?: string;
   /** 叠放画廊卡片最大宽度 px;缺省 520 */
   galleryMaxWidth?: number;
-  videos?: Array<{ src: string; caption?: BiText }>;
+  videos?: Array<{ src: string; caption?: BiText; aspect?: string }>;
   /** 额外外部演示（如 GitHub 互动 demo） */
   demoLink?: { href: string; label: BiText };
 }
@@ -207,7 +207,6 @@ export const YZS_WORKS: YzsWork[] = [
   },
   {
     slug: "yzs-merch",
-    // NBSP 连接 Merch Series，防止移动端在英文词组中间断行
     title: "YZS® 周边系列 / Merch Series",
     date: "2026",
     description: "周边设计 / 品牌延伸",
@@ -267,9 +266,10 @@ export const YZS_WORKS: YzsWork[] = [
     team: { zh: "杨子硕 Cali-Yang", en: "Zishuo Yang (Cali-Yang)" },
     images: [],
     videos: [
-      { src: `${P}/work07.mp4` },
+      { src: `${P}/work07.mp4`, aspect: "540 / 1050" },
       {
         src: `${P}/work07-demo.mp4`,
+        aspect: "1080 / 1468",
         caption: {
           zh: "补充录屏展示了系统在真实界面中的反馈方式与状态切换节奏，帮助观看者更直观地理解「安静指数」的工作逻辑。",
           en: "This supplementary screen recording shows the system's feedback patterns and state transitions in a live interface, making the logic of the Quiet Index easier to grasp.",
@@ -311,6 +311,7 @@ export const YZS_WORKS: YzsWork[] = [
     videos: [
       {
         src: `${P}/work08-demo.mp4`,
+        aspect: "1280 / 752",
         caption: {
           zh: "影像补充呈现作品的体量、表面纹理与口部内部空间，让观看路径从外部形象延伸到更具叙事性的装置细节。",
           en: "The video shows the work's volume, surface texture, and interior mouth space, extending the viewing path from external image to narrative installation detail.",

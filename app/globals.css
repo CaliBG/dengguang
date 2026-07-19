@@ -1245,3 +1245,33 @@ button {
     gap: 24px;
   }
 }
+
+/* 详情页可访问性与触摸修正 */
+
+.stack-card {
+  /* 纵向手势留给页面滚动；横向拖动才由 JS 接管换牌 */
+  touch-action: pan-y;
+}
+
+.stack-stage:focus-visible {
+  outline: 2px solid rgba(11, 12, 14, 0.6);
+  outline-offset: 6px;
+  border-radius: 16px;
+}
+
+.work-figure-thumb:focus-visible {
+  outline: 2px solid rgba(11, 12, 14, 0.6);
+  outline-offset: 4px;
+}
+
+.work-lightbox:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-card,
+  .work-lightbox,
+  .work-lightbox img {
+    transition: none !important;
+  }
+}

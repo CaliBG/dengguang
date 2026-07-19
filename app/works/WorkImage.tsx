@@ -31,6 +31,7 @@ function computeInitialTransform(thumb: HTMLImageElement): string | null {
 
 export default function WorkImage({ src, alt = "" }: { src: string; alt?: string }) {
   const thumbRef = useRef<HTMLImageElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [open, setOpen] = useState(false);
@@ -79,9 +80,13 @@ export default function WorkImage({ src, alt = "" }: { src: string; alt?: string
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // 焦点移入 dialog；关闭时还给缩略图（键盘用户不迷路）
+    overlayRef.current?.focus();
+    const thumb = thumbRef.current;
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      thumb?.focus();
     };
   }, [open, handleClose]);
 
@@ -112,13 +117,24 @@ export default function WorkImage({ src, alt = "" }: { src: string; alt?: string
         decoding="async"
         className="work-figure-thumb"
         style={{ opacity: open ? 0 : 1 }}
+        role="button"
+        tabIndex={0}
         onClick={handleOpen}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleOpen();
+          }
+        }}
       />
       {open
         ? createPortal(
             <div
+              ref={overlayRef}
               role="dialog"
               aria-modal="true"
+              aria-label={alt}
+              tabIndex={-1}
               className="work-lightbox"
               style={overlayStyle}
               onClick={handleClose}

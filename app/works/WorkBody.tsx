@@ -4,7 +4,7 @@
 // 结构：导语（双语切换）→ 信息块（材料/类型/团队/灵感）→ 金句 → 图片 → 视频 → 演示链接
 // 视频排版：onLoadedMetadata 检测宽高比——竖屏限高居中，横屏才全宽。
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../site/language";
 import type { BiText, YzsWork } from "../site/works-data";
 import StackGallery from "./StackGallery";
@@ -22,13 +22,38 @@ function MetaRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function VideoFigure({ src, caption }: { src: string; caption?: string }) {
-  const [ratio, setRatio] = useState<{ w: number; h: number } | null>(null);
+function VideoFigure({
+  src,
+  caption,
+  aspect,
+}: {
+  src: string;
+  caption?: string;
+  aspect?: string;
+}) {
+  // 优先用构建期写死的宽高比（无竞态、无布局跳动）；没有时退回
+  // onLoadedMetadata + 挂载时 readyState 兜底（metadata 可能先于 hydration 到达，
+  // loadedmetadata 事件不会重放）。
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [ratio, setRatio] = useState<{ w: number; h: number } | null>(() => {
+    if (!aspect) return null;
+    const [w, h] = aspect.split("/").map((n) => Number(n.trim()));
+    return w > 0 && h > 0 ? { w, h } : null;
+  });
   const portrait = ratio ? ratio.h > ratio.w : false;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (ratio || !video) return;
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA && video.videoWidth) {
+      setRatio({ w: video.videoWidth, h: video.videoHeight });
+    }
+  }, [ratio]);
 
   return (
     <figure className="work-video">
       <video
+        ref={videoRef}
         src={src}
         controls
         playsInline
@@ -70,7 +95,7 @@ export default function WorkBody({ work }: { work: YzsWork }) {
       </div>
 
       <blockquote className="work-quote">
-        {pick(work.quote).replace(/ —/g, " —")}
+        {pick(work.quote).replace(/ —/g, " —")}
       </blockquote>
 
       {work.images.length > 1 ? (
@@ -91,6 +116,7 @@ export default function WorkBody({ work }: { work: YzsWork }) {
               key={v.src}
               src={asset(v.src)}
               caption={v.caption ? pick(v.caption) : undefined}
+              aspect={v.aspect}
             />
           ))}
         </div>
