@@ -6,6 +6,9 @@ touch out/.nojekyll
 cd out
 rm -rf .git
 git init -q -b gh-pages
+# out/ 里的临时仓库继承不到外层配置，显式指定提交身份
+git config user.name "Cali-Yang"
+git config user.email "CaliBG@users.noreply.github.com"
 git add -A
 git commit -q -m "deploy"
 git push -f https://github.com/CaliBG/dengguang.git gh-pages
