@@ -26,7 +26,14 @@ export default function Home() {
               const revealDelay = { transitionDelay: `${(index % 3) * 70}ms` };
               const card = (
                 <>
-                  <div className="work-thumb">
+                  <div
+                    className="work-thumb"
+                    style={
+                      work.slug
+                        ? { viewTransitionName: `work-${work.slug}` }
+                        : undefined
+                    }
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`${BASE_PATH}${work.cover}`} alt={work.title} loading="lazy" />
                   </div>
