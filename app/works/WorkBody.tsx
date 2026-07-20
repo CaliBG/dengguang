@@ -85,7 +85,8 @@ export default function WorkBody({ work }: { work: YzsWork }) {
         ))}
       </div>
 
-      <div className="work-meta-block">
+      {/* key={lang} 让语言切换时重挂载，重放进场动画（丝滑换语言） */}
+      <div className="work-meta-block" key={`meta-${lang}`}>
         <MetaRow label={zh ? "材料" : "Material"} value={pick(work.material)} />
         {work.type && <MetaRow label={zh ? "类型" : "Type"} value={pick(work.type)} />}
         {work.team && <MetaRow label={zh ? "团队" : "Team"} value={pick(work.team)} />}
@@ -94,7 +95,7 @@ export default function WorkBody({ work }: { work: YzsWork }) {
         )}
       </div>
 
-      <blockquote className="work-quote">
+      <blockquote className="work-quote" key={`quote-${lang}`}>
         {pick(work.quote).replace(/ —/g, " —")}
       </blockquote>
 

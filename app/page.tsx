@@ -2,25 +2,28 @@ import Link from "next/link";
 import { MorsLightExperience } from "./MorsLightExperience";
 import { BackToTop } from "./site/BackToTop";
 import { WORKS } from "./site/content";
+import { ScrollReveal } from "./site/ScrollReveal";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export default function Home() {
   return (
     <main>
+      <ScrollReveal />
       <div className="hero-zone">
         <MorsLightExperience />
       </div>
 
       <div className="site-sections">
         <section className="site-section" id="works" aria-labelledby="works-title">
-          <p className="section-kicker">02 / 作品</p>
-          <h2 id="works-title">灯亮了，看看作品。</h2>
-          <p className="section-note">
+          <p className="section-kicker" data-reveal>02 / 作品</p>
+          <h2 id="works-title" data-reveal>灯亮了，看看作品。</h2>
+          <p className="section-note" data-reveal>
             装置、可穿戴、交互与品牌——从暗室到亮场，这些是灯下的作品。
           </p>
           <div className="works-grid">
-            {WORKS.map((work) => {
+            {WORKS.map((work, index) => {
+              const revealDelay = { transitionDelay: `${(index % 3) * 70}ms` };
               const card = (
                 <>
                   <div className="work-thumb">
@@ -39,11 +42,13 @@ export default function Home() {
                   key={work.id}
                   href={`/works/${work.slug}`}
                   className="work-card is-linked"
+                  data-reveal
+                  style={revealDelay}
                 >
                   {card}
                 </Link>
               ) : (
-                <article key={work.id} className="work-card">
+                <article key={work.id} className="work-card" data-reveal style={revealDelay}>
                   {card}
                 </article>
               );
@@ -52,9 +57,9 @@ export default function Home() {
         </section>
 
         <section className="site-section" id="about" aria-labelledby="about-title">
-          <p className="section-kicker">03 / 关于</p>
-          <h2 id="about-title">杨子硕</h2>
-          <p className="about-text">
+          <p className="section-kicker" data-reveal>03 / 关于</p>
+          <h2 id="about-title" data-reveal>杨子硕</h2>
+          <p className="about-text" data-reveal>
             这里将是一段关于我的介绍——正在整理中。作品上传后，这个框架里的占位内容会逐步替换为真实的项目、简历与联系方式。
           </p>
           <p className="about-links">
